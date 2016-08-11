@@ -106,13 +106,14 @@ class GeocodingService implements IGeocodingService
                 'Cache' => $cache
             );
         }
-
         $coordinates = $xml->result->geometry->location;
-        
+        $State = $xml->result->address_component[2]->short_name;
+
         return array(
             'Success' => true,
             'Latitude' => floatval($coordinates->lat),
             'Longitude' => floatval($coordinates->lng),
+            'State' => strval($State),
             'Cache' => true
         );
     }
