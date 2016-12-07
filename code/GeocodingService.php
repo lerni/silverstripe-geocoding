@@ -77,7 +77,7 @@ class GeocodingService implements IGeocodingService
         
         // Geocode
         $address = $this->normaliseAddress($address);
-        $requestURL = "http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&address=" . urlencode($address);
+        $requestURL = "http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&language=de&address=" . urlencode($address);
         $xml = simplexml_load_file($requestURL);
         
         // Check if there is a result
@@ -108,13 +108,17 @@ class GeocodingService implements IGeocodingService
         }
         $coordinates = $xml->result->geometry->location;
         $State = $xml->result->address_component[2]->short_name;
+		$Name = $xml->result->formatted_address;
 
-        return array(
+        $r = array(
             'Success' => true,
             'Latitude' => floatval($coordinates->lat),
             'Longitude' => floatval($coordinates->lng),
-            'State' => strval($State),
+			'Name' => strval($Name),
+			'State' => strval($State),
             'Cache' => true
         );
+
+		return $r;
     }
 }
