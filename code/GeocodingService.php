@@ -106,19 +106,24 @@ class GeocodingService implements IGeocodingService
                 'Cache' => $cache
             );
         }
-        $coordinates = $xml->result->geometry->location;
-        $State = $xml->result->address_component[2]->short_name;
-		$Name = $xml->result->formatted_address;
 
         $r = array(
             'Success' => true,
-            'Latitude' => floatval($coordinates->lat),
-            'Longitude' => floatval($coordinates->lng),
-			'Name' => strval($Name),
-			'State' => strval($State),
             'Cache' => true
         );
 
+		if ($coordinates = $xml->result->geometry->location) {
+			$r['Latitude'] = floatval($coordinates->lat);
+			$r['Longitude'] = floatval($coordinates->lng);
+		}
+
+		if ($State = $xml->result->address_component[2]->short_name) {
+			$r['State'] = strval($State);
+		}
+
+		if ($Name = $xml->result->formatted_address) {
+			$r['Name'] = strval($Name);
+		}
 		return $r;
     }
 }
